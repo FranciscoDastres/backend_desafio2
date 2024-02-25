@@ -13,57 +13,59 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(dirname, 'index.html'));
 });
 
-app.post("/canciones", (req, res) => {
-    try {
-        const cancion = req.body
-        const canciones = JSON.parse(fs.readFileSync("repertorio.json"))
-        canciones.push(cancion)
-        fs.writeFileSync("repertorio.json", JSON.stringify(canciones))
-        res.send("Canción agregada exitosamente!")
-    } catch (error) {
-        console.error("Error al agregar la canción:", error)
-        res.status(500).send("Error al agregar la canción")
-    }
+app.post('/canciones', (req, res) => {
+  try {
+    const cancion = req.body;
+    const canciones = JSON.parse(fs.readFileSync('repertorio.json'));
+    canciones.push(cancion);
+    fs.writeFileSync('repertorio.json', JSON.stringify(canciones));
+    res.send('Canción agregada exitosamente!');
+  } catch (error) {
+    console.error('Error al agregar la canción:', error);
+    res.status(500).send('Error al agregar la canción');
+  }
 });
 
-app.get("/canciones", (req, res) => {
-    try {
-        const canciones = JSON.parse(fs.readFileSync("repertorio.json"));
-        res.json(canciones);
-    } catch (error) {
-        console.error("Error al obtener las canciones:", error);
-        res.status(500).send("Error al obtener las canciones");
-    }
+app.get('/canciones', (req, res) => {
+  try {
+    const canciones = JSON.parse(fs.readFileSync('repertorio.json'));
+    res.json(canciones);
+  } catch (error) {
+    console.error('Error al obtener las canciones:', error);
+    res.status(500).send('Error al obtener las canciones');
+  }
 });
 
 // Made Ricardo Moena
-app.put("/canciones/:id", (req, res) => {
-    try {
-        const {id} = req.params 
-        const cancion = req.body;
-        const canciones = JSON.parse(fs.readFileSync("repertorio.json"));
-        const index = canciones.findIndex(c => c.id == id);
-        canciones[index]= cancion
-        fs.writeFileSync("repertorio.json", JSON.stringify(canciones))
-        res.send("cancion modificada con éxito")
-
-    } catch (error) {
-        console.error("Error al actualizar la canción:", error);
-        res.status(500).send("Error al actualizar la canción");
-    }
+app.put('/canciones/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const cancion = req.body;
+    const canciones = JSON.parse(fs.readFileSync('repertorio.json'));
+    const index = canciones.findIndex((c) => c.id == id);
+    canciones[index] = cancion;
+    fs.writeFileSync('repertorio.json', JSON.stringify(canciones));
+    res.send('cancion modificada con éxito');
+  } catch (error) {
+    console.error('Error al actualizar la canción:', error);
+    res.status(500).send('Error al actualizar la canción');
+  }
 });
 
-app.delete("/canciones/:id", (req, res) => {
-    try {
-        const id = req.params.id;
-        let canciones = JSON.parse(fs.readFileSync("repertorio.json"));
-        canciones = canciones.filter(c => c.id !== id);
-        fs.writeFileSync("repertorio.json", JSON.stringify(canciones));
-        res.send("Canción eliminada exitosamente!");
-    } catch (error) {
-        console.error("Error al eliminar la canción:", error);
-        res.status(500).send("Error al eliminar la canción");
-    }
+//Made by Matías C
+
+app.delete('/canciones/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    let canciones = JSON.parse(fs.readFileSync('repertorio.json'));
+    const index = canciones.findIndex((p) => p.id == id);
+    canciones.splice(index, 1);
+    fs.writeFileSync('repertorio.json', JSON.stringify(canciones));
+    res.send('Canción eliminada exitosamente!');
+  } catch (error) {
+    console.error('Error al eliminar la canción:', error);
+    res.status(500).send('Error al eliminar la canción');
+  }
 });
 
 app.listen(PORT, console.log('¡Servidor encendido!'));
